@@ -52,3 +52,11 @@ class VmssCluster(ExistingCluster):
             self.config.cluster_name)
         print('name:', vmss_status.name,
               '\nprovisioning_state:', vmss_status.provisioning_state)
+
+    def terminate(self):
+        config = self.config
+        azure_config = dict(config.items("azure"))
+        subprocess.call(["ansible-playbook",
+                         join(config.deploy_path,
+                              "ansible/azure-terminate.yml"),
+                         "--extra-vars", json.dumps(azure_config)])
